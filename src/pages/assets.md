@@ -4,7 +4,7 @@ title: 'Assets'
 
 # 🧩 Assets
 ## Cave Tileset
-## Pixel Art Suck
+## Pixel Art Duck
 ## PixelStorm Font Pack
 ## Slime Enemy
 ## RPG Character Pack
