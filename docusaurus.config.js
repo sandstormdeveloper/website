@@ -105,7 +105,7 @@ const config = {
             items: [
               {
                 label: 'PixelStorm',
-                to: '/docs/intro',
+                to: '/docs',
               },
             ],
           },
