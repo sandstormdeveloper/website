@@ -29,18 +29,25 @@
   --docusaurus-highlighted-code-line-bg: rgba(0, 0, 0, 0.3);
 }
 
-.itch-embed--light {
+.itch-embed {
+  display: block;
+  width: 100%;
+  max-width: 552px;
+  height: 167px;
+}
+
+.itch-embed.itch-embed--light {
   display: block;
 }
 
-.itch-embed--dark {
+.itch-embed.itch-embed--dark {
   display: none;
 }
 
-[data-theme='dark'] .itch-embed--light {
+[data-theme='dark'] .itch-embed.itch-embed--light {
   display: none;
 }
 
-[data-theme='dark'] .itch-embed--dark {
+[data-theme='dark'] .itch-embed.itch-embed--dark {
   display: block;
 }
