@@ -33,7 +33,14 @@
   display: block;
   width: 100%;
   max-width: 552px;
-  height: 167px;
+}
+
+@media (max-width: 539px) {
+  .itch-embed {
+    width: 319px;
+    max-width: 100%;
+    margin: 0 auto;
+  }
 }
 
 .itch-embed.itch-embed--light {
