@@ -28,3 +28,19 @@
   --ifm-color-primary-lightest: #00b8c5;
   --docusaurus-highlighted-code-line-bg: rgba(0, 0, 0, 0.3);
 }
+
+.itch-embed--light {
+  display: block;
+}
+
+.itch-embed--dark {
+  display: none;
+}
+
+[data-theme='dark'] .itch-embed--light {
+  display: none;
+}
+
+[data-theme='dark'] .itch-embed--dark {
+  display: block;
+}

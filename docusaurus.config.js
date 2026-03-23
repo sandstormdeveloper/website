@@ -73,7 +73,7 @@ const config = {
       // Replace with your project's social card
       image: 'social-card.jpg',
       colorMode: {
-        respectPrefersColorScheme: true,
+        respectPrefersColorScheme: false,
       },
       navbar: {
         title: 'Sandstorm Dev',

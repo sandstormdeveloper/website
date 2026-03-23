@@ -10,6 +10,6 @@ The game features 16 hand crafted levels, with different types of enemies, obsta
 
 Whether you're here to beat the game in record time, or just relive the feeling of popping in a cartridge and pressing start, My Soul Got Lost In A Dungeon is ready to bring the nostalgia ;)
 
-<a href="https://sandstormdev.itch.io/my-soul-got-lost-in-a-dungeon">
-<img src="img/games/msgld.gif" alt="My Soul Got Lost In A Dungeon" width="500"/>
-</a>
+<iframe class="itch-embed itch-embed--dark" frameborder="0" src="https://itch.io/embed/3847540?bg_color=222222&amp;fg_color=eeeeee&amp;link_color=6ef6ff&amp;border_color=363636" width="552" height="167"><a href="https://sandstormdev.itch.io/my-soul-got-lost-in-a-dungeon">My Soul Got Lost In A Dungeon by Sandstorm</a></iframe>
+<iframe class="itch-embed itch-embed--light" frameborder="0" src="https://itch.io/embed/3847540?link_color=003df6" width="552" height="167"><a href="https://sandstormdev.itch.io/my-soul-got-lost-in-a-dungeon">My Soul Got Lost In A Dungeon by Sandstorm</a></iframe>
+<br/>
