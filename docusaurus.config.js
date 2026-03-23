@@ -74,6 +74,7 @@ const config = {
       image: 'social-card.jpg',
       colorMode: {
         respectPrefersColorScheme: false,
+        defaultMode: 'dark',
       },
       navbar: {
         title: 'Sandstorm Dev',
