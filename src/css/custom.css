@@ -40,7 +40,6 @@
   max-width: 640px;
   aspect-ratio: 1 / 1;
   height: auto;
-  margin: 0 auto;
 }
 
 @media (max-width: 640px) {
@@ -65,7 +64,6 @@
   .itch-embed:not(.itch-embed--game) {
     width: 319px;
     max-width: 100%;
-    margin: 0 auto;
   }
 }
 
