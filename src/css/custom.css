@@ -35,8 +35,34 @@
   max-width: 552px;
 }
 
+.itch-embed.itch-embed--game {
+  width: 100%;
+  max-width: 640px;
+  aspect-ratio: 1 / 1;
+  height: auto;
+  margin: 0 auto;
+}
+
+@media (max-width: 640px) {
+  .itch-embed.itch-embed--game {
+    aspect-ratio: 8 / 11;
+  }
+}
+
+@media (max-width: 540px) {
+  .itch-embed.itch-embed--game {
+    aspect-ratio: 6 / 9;
+  }
+}
+
+@media (max-width: 440px) {
+  .itch-embed.itch-embed--game {
+    aspect-ratio: 4 / 7;
+  }
+}
+
 @media (max-width: 539px) {
-  .itch-embed {
+  .itch-embed:not(.itch-embed--game) {
     width: 319px;
     max-width: 100%;
     margin: 0 auto;
