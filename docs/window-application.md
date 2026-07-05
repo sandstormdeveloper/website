@@ -43,11 +43,11 @@ Reserve `Application::OnUpdate` for very simple global logic or tools.
 
 | Method | Use |
 | --- | --- |
-| `SetDefaultShader(name)` | loads `assets/shaders/<name>.vert` and `.frag` |
 | `LoadTexture(name, path)` | registers a texture under a logical name |
 | `LoadFont(name, path, pixelHeight)` | registers a font under a logical name |
-| `SetFont(name, pixelHeight)` | shortcut to load from `assets/fonts/` and make it current |
 | `SetDefaultFont(name)` | sets an already loaded font as the default font |
+| `SetPostProcessEnabled(enabled)` | enables or disables the CRT-style postprocess |
+| `IsPostProcessEnabled()` | checks the current postprocess state |
 
 ### Behavior details
 
@@ -55,8 +55,9 @@ Reserve `Application::OnUpdate` for very simple global logic or tools.
 | --- | --- |
 | `LoadTexture` | reuses the resource if that name already exists |
 | `LoadFont` | reuses the resource if that name already exists |
-| `SetFont` | uses internal oversampling for sharper text |
 | `SetDefaultFont` | fails if the font is not loaded |
+| `SetPostProcessEnabled` | toggles the final screen pass without changing the loaded shader |
+| `IsPostProcessEnabled` | returns the current toggle state |
 | `DrawText` | ignores empty strings |
 
 ### Text
@@ -117,6 +118,9 @@ The gravity affects `Rigidbody` instances that have `UseGravity = true`.
 | `GetScenes()` | `SceneManager` |
 
 `Application` is the recommended way to work from gameplay code.
+
+By default, the engine loads the base shader and font, and the CRT-style postprocess is enabled.
+If you want a clean output, call `Application::SetPostProcessEnabled(false)`.
 
 ## `Window`
 

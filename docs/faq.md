@@ -21,7 +21,8 @@ Usually it is one of two things:
 - you did not call `UI::Bind(app)`
 - no default font has been loaded
 
-`Application::SetFont("PixelStormMini.ttf", 16.0f)` is usually the quickest way to get text ready.
+The engine now loads the default `PixelStormMini.ttf` font at size 16 automatically.
+If you replace it, load another font with `Application::LoadFont()` and select it with `Application::SetDefaultFont()`.
 
 ## The collider does not rotate with the sprite
 

@@ -48,8 +48,19 @@ player.Bind(0);
 
 | Case | Recommendation |
 | --- | --- |
-| HUD and dialog | `Application::SetFont()` |
+| HUD and dialog | `Application::LoadFont()` + `Application::SetDefaultFont()` |
 | tooling or isolated tests | `Font` directly |
+
+### Postprocess
+
+The default renderer now includes a CRT-style postprocess pass.
+
+| Method | Use |
+| --- | --- |
+| `Application::SetPostProcessEnabled(true)` | turns the effect on |
+| `Application::SetPostProcessEnabled(false)` | draws the scene without the final screen pass |
+
+Use this if you want a clean pixel-art look or if you want to switch the effect off for UI-heavy scenes.
 
 ## `Shader`
 
@@ -123,7 +134,7 @@ It is useful for tools or for your own higher-level layer.
 
 The most convenient gameplay flow is:
 
-1. use `Application::LoadTexture()` and `Application::SetFont()`
+1. use `Application::LoadTexture()` and `Application::LoadFont()` when you need extra resources
 2. let `ResourceManager` cache the resources
 3. draw through `SpriteRenderer` and `UI::Print()`
 

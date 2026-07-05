@@ -67,8 +67,8 @@ There are two common ways to load content:
 | Method | Expected path | Recommended use |
 | --- | --- | --- |
 | `Application::LoadTexture` | any relative or absolute path you pass in | standalone resources from any folder |
-| `Application::SetFont` | `assets/fonts/<name>` | main game font |
-| `Application::SetDefaultShader` | `assets/shaders/<name>.vert` and `.frag` | engine base shader |
+| `Application::LoadFont` | `assets/fonts/<name>` | additional fonts loaded at runtime |
+| `Application::SetDefaultFont` | a font that was already loaded | switches the current default font |
 
 ## What `Application` initializes
 

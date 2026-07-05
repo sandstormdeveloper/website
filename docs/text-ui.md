@@ -74,14 +74,6 @@ UI::Print("Score: 120", Vec2(12.0f, 12.0f), Colors::White(), 1.0f, false);
 UI::Print("Merchant", npc.Transform().GetPosition() + Vec2(0.0f, -24.0f), Colors::White(), 1.0f, true);
 ```
 
-## Default font
-
-The default font is usually set with:
-
-```cpp
-app.SetFont("PixelStormMini.ttf", 16.0f);
-```
-
 :::tip
 If `UI::Print()` does not draw anything, first check that you called `UI::Bind(app)` and that a default font has been loaded.
 :::

@@ -63,7 +63,6 @@ int main()
     Application app(640, 360, "PixelStorm Quick Start");
 
     app.LoadTexture("wall", "assets/wall.png");
-    app.SetFont("PixelStormMini.ttf", 16.0f);
 
     UI::Bind(app);
 
@@ -81,16 +80,11 @@ int main()
 
 - Opens a `640x360` window.
 - Loads a texture named `wall`.
-- Activates the base text font.
+- Uses the default text font loaded by the engine.
 - Registers a scene.
 - Creates a visible entity with `CreateSprite()`.
 - Moves it with the default `move` axis.
 - Draws a fixed HUD line with `UI::Print()`.
-
-:::important
-`SetFont("PixelStormMini.ttf", 16.0f)` looks for the file inside `assets/fonts/`.
-If you change it, use the real file name and keep the directory correct.
-:::
 
 :::tip
 The `move` axis is already bound by default to both `WASD` and the arrow keys.
