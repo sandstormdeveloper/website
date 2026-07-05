@@ -4,7 +4,7 @@ title: Animation
 
 # Animation
 
-The engine animation system is based on spritesheet clips and one animator per entity.
+The engine animation system is based on spritesheet clips and one animator per entity. It is intentionally simple, but it covers the common cases needed by a small 2D game: idle states, walking loops, one-shot effects, and basic clip switching.
 
 ## `AnimationClip`
 
@@ -66,7 +66,7 @@ AnimationClip run(glm::ivec2(32, 32), 6, 3, 10.0f, true, 0);
 | `GetFrameCount()` / `SetFrameCount()` | number of frames |
 | `GetFramesPerRow()` / `SetFramesPerRow()` | sheet layout |
 
-### Key behavior
+### Key Behavior
 
 - `Play(name)` does nothing if the clip does not exist
 - `RemoveClip(name)` clears the active clip if it was removed
@@ -80,7 +80,7 @@ player.Animation().AddClip("walk", AnimationClip(glm::ivec2(32, 32), 6, 3, 10.0f
 player.Animation().Play("walk");
 ```
 
-## System integration
+## System Integration
 
 `AnimationSystem` automatically updates entities that have:
 

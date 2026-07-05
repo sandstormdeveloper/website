@@ -4,16 +4,16 @@ title: Core
 
 # Core
 
-This module groups the basic utilities that show up in almost every game:
+The core module groups the utility types and services that appear throughout the engine:
 
-- public vector and color types
-- convenience colors
+- public vector and color aliases
+- convenience color helpers
 - frame timing
 - logging
 
 ## `PixelStorm.h`
 
-`PixelStorm.h` is the recommended entry include when you want to use the public API from gameplay code.
+`PixelStorm.h` is the recommended entry point when you want to use the public API from gameplay code.
 
 ```cpp
 #include "pixelstorm/PixelStorm.h"
@@ -25,18 +25,18 @@ If you already know exactly which module you need, you can include the specific 
 
 ## Math
 
-`pixelstorm/core/Math.h` defines simple aliases for the most used types:
+`pixelstorm/core/Math.h` defines the most common aliases used across the engine:
 
 | Type | Alias | Base |
 | --- | --- | --- |
 | 2D vector | `Vec2` | `glm::vec2` |
 | RGBA color | `Color` | `glm::vec4` |
 
-Use them when you want more readable gameplay code and do not want to depend on GLM types in every file.
+These aliases make gameplay code easier to read and reduce the amount of GLM-specific syntax you need to carry around in every file.
 
 ## Colors
 
-`pixelstorm/core/Color.h` exposes convenience colors:
+`pixelstorm/core/Color.h` exposes a small set of convenience colors:
 
 | Function | Value |
 | --- | --- |
@@ -45,11 +45,17 @@ Use them when you want more readable gameplay code and do not want to depend on 
 | `Colors::Blue()` | soft blue used by the demo |
 | `Colors::Green()` | soft green |
 
-These are convenience helpers, not a full palette.
+They are intended as simple helpers, not as a full palette system.
+
+### Example
+
+```cpp
+entity.Sprite().SetColor(Colors::Green());
+```
 
 ## Time
 
-`Time` tracks frame delta time and total elapsed time.
+`Time` tracks frame delta time and elapsed time.
 
 | Function | What it does |
 | --- | --- |
@@ -59,7 +65,11 @@ These are convenience helpers, not a full palette.
 | `Time::GetDeltaTime()` | time since the previous frame |
 | `Time::GetElapsedTime()` | total time since the clock started |
 
-### Usage
+### Why It Matters
+
+Game logic should normally be frame-rate independent. PixelStorm uses `deltaTime` so movement, physics, animation, and particles advance proportionally to real time instead of to the raw number of rendered frames.
+
+### Example
 
 ```cpp
 const float dt = static_cast<float>(Time::GetDeltaTime());
@@ -72,21 +82,23 @@ entity.Transform().Translate(Vec2(60.0f * dt, 0.0f));
 
 ## Log
 
-`Log` writes messages to the console.
+`Log` writes messages to the console and is used by both the engine and gameplay code.
 
 | Function | Use |
 | --- | --- |
-| `Log::Debug()` | gameplay or diagnostic messages |
+| `Log::Debug()` | gameplay events or technical diagnostics |
 | `Log::Info()` | general information |
-| `Log::Warning()` | non-fatal warnings |
-| `Log::Error()` | important errors |
+| `Log::Warning()` | non-fatal problems |
+| `Log::Error()` | important failures |
 
-### When to use it
+### When To Use Each Level
 
-- use `Debug` for gameplay events
-- use `Warning` for recoverable conditions
-- use `Error` when an operation cannot continue
+- use `Debug` for scene events, triggers, or temporary diagnostics
+- use `Info` for initialization and normal state changes
+- use `Warning` when something is recoverable but suspicious
+- use `Error` when the operation cannot continue safely
 
 :::important
-`Init()` and `Shutdown()` are managed by `Application`. You should not call them from gameplay code.
+`Init()` and `Shutdown()` are managed by `Application`.
+Gameplay code should not call them directly.
 :::

@@ -4,7 +4,7 @@ title: Physics
 
 # Physics
 
-PixelStorm exposes AABB physics, gravity, and triggers.
+PixelStorm exposes AABB physics, gravity, and triggers. The system is deliberately simple, but it is enough to support movement, obstacle blocking, and scene interaction for a 2D game.
 
 ## `Collision`
 
@@ -70,7 +70,7 @@ If you rotate a sprite, the collider remains an AABB.
 | `GetTriggerEvents()` | returns the events from the last frame |
 | `GetTriggerEventsFor(entity)` | filters trigger events for one entity |
 
-### Default gravity
+### Default Gravity
 
 `PhysicsSystem` starts with:
 
@@ -78,9 +78,9 @@ If you rotate a sprite, the collider remains an AABB.
 Vec2(0.0f, 980.0f)
 ```
 
-That works well for a platformer-like gravity feel.
+That gives the engine a platformer-like gravity feel by default.
 
-### Trigger events
+### Trigger Events
 
 `TriggerEventType` can be:
 
@@ -116,7 +116,7 @@ To use a trigger in practice:
 2. register callbacks with `Entity::Trigger()`
 3. or read events from `GetTriggerEventsFor()`
 
-### Callback example
+### Callback Example
 
 ```cpp
 zone.Trigger().SetOnEnter([&](Entity other)

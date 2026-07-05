@@ -4,9 +4,11 @@ title: Components
 
 # Components
 
-These are the data components you will use most often from gameplay code.
+These are the data components you will use most often from gameplay code. They are intentionally small and data-oriented so the systems can read exactly what they need.
 
-## `Transform`
+## Spatial
+
+### `Transform`
 
 `Transform` defines where an entity is and how it is drawn.
 
@@ -35,10 +37,12 @@ player.Transform().Rotate(90.0f);
 ```
 
 :::tip
-The `Pivot` is useful when you want to rotate around the center of a sprite or around a character's feet.
+`Pivot` is useful when you want to rotate around the center of a sprite or around a character's feet.
 :::
 
-## `SpriteRenderer`
+## Visual
+
+### `SpriteRenderer`
 
 `SpriteRenderer` controls the visual part of an entity.
 
@@ -66,9 +70,11 @@ sprite.Sprite().FlipX(true);
 sprite.Sprite().SetRenderOrder(50);
 ```
 
-## `Collider`
+## Physics
 
-`Collider` defines an AABB for physics and triggers.
+### `Collider`
+
+`Collider` defines an axis-aligned box for physics and triggers.
 
 | Field | Default | Use |
 | --- | --- | --- |
@@ -93,7 +99,7 @@ box.Collider().SetOffset(Vec2(0.0f, 8.0f));
 box.Trigger().SetTrigger(true);
 ```
 
-## `Rigidbody`
+### `Rigidbody`
 
 `Rigidbody` controls the dynamic part of physics.
 
@@ -114,3 +120,83 @@ player.Rigidbody().SetVelocity(Vec2(180.0f, 0.0f));
 :::note
 The engine's collisions are AABB based. If you need real rotating physics or complex colliders, the current public API does not expose them.
 :::
+
+## Animation
+
+### `AnimationClip`
+
+`AnimationClip` describes how to read frames from a spritesheet.
+
+| Field | Default | Use |
+| --- | --- | --- |
+| `FrameSize` | `(0, 0)` | size of each frame |
+| `FrameCount` | `0` | total number of frames |
+| `FramesPerRow` | `0` | horizontal layout |
+| `FPS` | `12.0f` | playback speed |
+| `Loop` | `true` | whether it loops |
+| `StartFrame` | `0` | base frame inside the spritesheet |
+
+### `Animator`
+
+`Animator` stores the playback state and the clip map.
+
+| Field | Default | Use |
+| --- | --- | --- |
+| `Clips` | empty | clip map by name |
+| `CurrentClip` | empty | active clip |
+| `Playing` | `true` | whether it advances |
+| `CurrentFrame` | `0` | current frame |
+| `Accumulator` | `0.0f` | time accumulated toward the next frame |
+
+### Behavior
+
+- if `FramesPerRow` is `0`, the system uses `1`
+- if `FrameCount <= 0`, the clip does not advance
+- if `FPS <= 0`, the clip stays on the current frame
+
+### Example
+
+```cpp
+AnimationClip run(glm::ivec2(32, 32), 6, 3, 10.0f, true, 0);
+```
+
+## Particles
+
+### `Particle`
+
+`Particle` stores the state of a live particle.
+
+| Field | Use |
+| --- | --- |
+| `Velocity` | current velocity |
+| `Lifetime` | total lifetime |
+| `Age` | time already lived |
+| `StartColor` / `EndColor` | color interpolation |
+| `StartScale` / `EndScale` | scale interpolation |
+| `GravityScale` | per-particle gravity |
+
+### `ParticleEmitter`
+
+`ParticleEmitter` defines how particles are spawned.
+
+| Field | Default | Use |
+| --- | --- | --- |
+| `Active` | `true` | whether it can emit |
+| `Loop` | `false` | whether it auto-emits cyclically |
+| `AutoEmit` | `false` | whether it emits over time |
+| `BurstCount` | `8` | particles per burst |
+| `EmitRate` | `0.0f` | bursts per second |
+| `Lifetime` | `0.75f` | lifetime of each particle |
+| `Speed` | `80.0f` | base speed |
+| `SpeedVariation` | `20.0f` | random variation |
+| `Spread` | `180.0f` | angular spread |
+| `RenderOrder` | `0` | draw layer |
+
+### Example
+
+```cpp
+ParticleEmitter emitter;
+emitter.BurstCount = 12;
+emitter.AutoEmit = true;
+emitter.EmitRate = 4.0f;
+```

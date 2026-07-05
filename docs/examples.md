@@ -4,9 +4,9 @@ title: Examples
 
 # Examples
 
-These patterns come from the demo and from the real public API.
+These patterns come from the demo and from the real public API. They are meant to show the shape of normal gameplay code, not to replace the full reference pages.
 
-## Create an actor
+## Create an Actor
 
 ```cpp
 Entity player = GetWorld().CreateActor(
@@ -17,7 +17,7 @@ Entity player = GetWorld().CreateActor(
     "player_run");
 ```
 
-## Move an entity
+## Move an Entity
 
 ```cpp
 const Vec2 move = Input::GetAxis2D("move");
@@ -25,7 +25,7 @@ player.Transform().Translate(move * 120.0f * deltaTime);
 player.Rigidbody().SetVelocity(move * 120.0f);
 ```
 
-## Change scenes
+## Change Scenes
 
 ```cpp
 if (Input::IsActionJustPressed("interact"))
@@ -34,33 +34,33 @@ if (Input::IsActionJustPressed("interact"))
 }
 ```
 
-## Follow an entity with the camera
+## Follow an Entity With the Camera
 
 ```cpp
 GetApplication().FollowCamera(player, Vec2(0.0f, 0.0f), false, 8.0f);
 ```
 
-## Flip a sprite
+## Flip a Sprite
 
 ```cpp
 player.Sprite().FlipX(player.Rigidbody().GetVelocity().x < 0.0f);
 ```
 
-## Adjust the rotation pivot
+## Adjust the Rotation Pivot
 
 ```cpp
 player.Transform().SetPivot(Vec2(16.0f, 16.0f));
 player.Transform().Rotate(45.0f);
 ```
 
-## Fixed HUD and world-following text
+## Fixed HUD and World-Following Text
 
 ```cpp
 UI::Print("Score: 120", Vec2(12.0f, 12.0f), Colors::White(), 1.0f, false);
 UI::Print("Enemy", enemy.Transform().GetPosition(), Colors::Red(), 1.0f, true);
 ```
 
-## Simple trigger
+## Simple Trigger
 
 ```cpp
 zone.Trigger().SetOnEnter([&](Entity other)
@@ -72,9 +72,9 @@ zone.Trigger().SetOnEnter([&](Entity other)
 });
 ```
 
-## Recommended patterns
+## Recommended Patterns
 
-### An actor that responds to input
+### An Actor That Responds to Input
 
 1. create the entity with `CreateActor()`
 2. read `Input::GetAxis2D("move")`
@@ -87,11 +87,17 @@ zone.Trigger().SetOnEnter([&](Entity other)
 2. use the default font
 3. keep the text short and update it every frame
 
-### Boss or NPC that follows the camera
+### Boss or NPC That Follows the Camera
 
 1. create the visible entity
 2. call `FollowCamera()`
 3. enable `followRotation` if needed
+
+### Trigger-Driven Scene Logic
+
+1. create a trigger with `CreateStaticBox(..., true)`
+2. register `SetOnEnter()` or `SetOnExit()`
+3. keep the callback small and let the scene decide what to do next
 
 :::tip
 If you want to build a complete game quickly, use `CreateSprite()` for props, `CreateActor()` for movable bodies, and `CreateStaticBox()` for walls and triggers.

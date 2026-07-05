@@ -4,7 +4,7 @@ title: Camera
 
 # Camera
 
-PixelStorm uses a 2D orthographic camera.
+PixelStorm uses a 2D orthographic camera. That choice fits the engine well because it keeps the projection simple, makes pixel-art scenes easier to reason about, and lines up naturally with the logical resolution used by the rest of the API.
 
 ## `Camera2D`
 
@@ -14,14 +14,14 @@ PixelStorm uses a 2D orthographic camera.
 Camera2D camera(-320.0f, 320.0f, 180.0f, -180.0f);
 ```
 
-The constructor defines the initial orthographic bounds.
+The constructor defines the initial orthographic bounds. In the default engine setup, those bounds are derived from the initial window size.
 
 ### Public API
 
 | Method | Use |
 | --- | --- |
 | `SetProjection(left, right, bottom, top)` | changes the orthographic bounds |
-| `SetPosition(position)` | moves the camera |
+| `SetPosition(position)` | moves the camera in world space |
 | `SetRotation(rotationDegrees)` | rotates the camera around Z |
 | `GetPosition()` | current position |
 | `GetRotation()` | current rotation |
@@ -29,11 +29,11 @@ The constructor defines the initial orthographic bounds.
 | `GetViewMatrix()` | view matrix |
 | `GetViewProjectionMatrix()` | combined matrix |
 
-### When to use it
+### When To Use It
 
-- use `Application::SetCameraPosition()` for simple adjustments
+- use `Application::SetCameraPosition()` for simple camera adjustments
 - use `GetCamera()` when you need direct camera access
-- use `FollowCamera()` when you want the engine to follow an entity
+- use `FollowCamera()` when the camera should track an entity automatically
 
 ## Coordinates
 
@@ -47,15 +47,15 @@ With the default `Application` projection:
 That matches `Input::GetAxis2D()` and the patterns used in the demo.
 :::
 
-## Camera follow
+## Camera Follow
 
-`Application::FollowCamera()` is the recommended way to follow an entity.
+`Application::FollowCamera()` is the recommended way to track an entity.
 
 | Parameter | Use |
 | --- | --- |
 | `entity` | target to follow |
-| `offset` | relative offset |
-| `followRotation` | whether to copy rotation |
+| `offset` | relative offset from the target |
+| `followRotation` | whether the camera copies the target rotation |
 | `followSpeed` | smoothing amount |
 
 ### Behavior
@@ -70,16 +70,16 @@ That matches `Input::GetAxis2D()` and the patterns used in the demo.
 GetApplication().FollowCamera(player, Vec2(0.0f, 0.0f), false, 8.0f);
 ```
 
-## Useful patterns
+## Useful Patterns
 
-### Fixed HUD and world text
+### Fixed HUD and World Text
 
 ```cpp
 UI::Print("HUD", Vec2(12.0f, 12.0f), Colors::White(), 1.0f, false);
 UI::Print("Enemy", enemy.Transform().GetPosition(), Colors::Red(), 1.0f, true);
 ```
 
-### Instant camera snap
+### Instant Camera Snap
 
 ```cpp
 GetApplication().FollowCamera(player, Vec2(0.0f, 0.0f), false, 0.0f);

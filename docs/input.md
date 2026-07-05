@@ -4,7 +4,7 @@ title: Input
 
 # Input
 
-`Input` handles keys, mouse, named actions, and axes.
+`Input` handles keys, mouse, named actions, and axes. It is snapshot-based, which means gameplay code reads the state captured for the current frame instead of polling the operating system directly.
 
 ## Basic API
 
@@ -16,6 +16,8 @@ title: Input
 | `IsKeyJustPressed()` | up-to-down transition |
 | `IsKeyJustReleased()` | down-to-up transition |
 | `IsMouseButtonDown()` | mouse button currently held |
+| `IsMouseButtonJustPressed()` | mouse button pressed this frame |
+| `IsMouseButtonJustReleased()` | mouse button released this frame |
 | `GetMousePosition()` | cursor position in logical space |
 | `GetMouseDelta()` | cursor movement between frames |
 
@@ -24,9 +26,9 @@ title: Input
 In a normal game you should not touch it unless you are building your own GLFW layer.
 :::
 
-## Keys and mouse
+## Keys and Mouse
 
-`Key` exposes a small but useful selection:
+`Key` exposes a compact selection that is enough for the engine's default bindings:
 
 - `Space`
 - `A` to `Z`
@@ -53,7 +55,7 @@ Actions are logical names that group multiple keys.
 | `IsActionJustPressed(name)` | checks the press transition |
 | `IsActionJustReleased(name)` | checks the release transition |
 
-### Default bindings
+### Default Bindings
 
 On first use, the engine registers this automatically:
 
@@ -68,10 +70,10 @@ On first use, the engine registers this automatically:
 
 :::tip
 `IsAction...()` checks any key associated with the name.
-If you want rebinding, clear the action and recreate it with your keys.
+If you want rebinding, clear the action and recreate it with your own keys.
 :::
 
-## 1D axes
+## 1D Axes
 
 | Method | Use |
 | --- | --- |
@@ -82,7 +84,7 @@ If you want rebinding, clear the action and recreate it with your keys.
 
 `GetAxis()` sums every registered pair and then clamps the result.
 
-## 2D axes
+## 2D Axes
 
 | Method | Use |
 | --- | --- |
@@ -91,7 +93,7 @@ If you want rebinding, clear the action and recreate it with your keys.
 | `RemoveAxis2DBinding(...)` | removes the configuration |
 | `GetAxis2D(name)` | returns a normalized `Vec2` |
 
-### Default axes
+### Default Axes
 
 | Axis | Keys |
 | --- | --- |
@@ -99,7 +101,7 @@ If you want rebinding, clear the action and recreate it with your keys.
 | `arrows_move` | arrows |
 | `wasd_move` | `WASD` |
 
-### Direction note
+### Direction Note
 
 `GetAxis2D()` uses screen-space coordinates:
 
@@ -118,12 +120,23 @@ Mouse delta and logical position do not use exactly the same space.
 If you mix both in your own system, it is worth checking the context carefully.
 :::
 
-## Example
+## Practical Example
 
 ```cpp
 const Vec2 move = Input::GetAxis2D("move");
+
 if (Input::IsActionJustPressed("jump"))
 {
     Log::Debug("jump");
 }
 ```
+
+## Common Pattern
+
+If you want to build your own control scheme, the usual flow is:
+
+1. clear the default binding you want to replace
+2. register your own keys
+3. read the action or axis from gameplay code
+
+That keeps the gameplay layer independent from any particular keyboard layout.

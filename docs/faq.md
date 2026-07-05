@@ -21,7 +21,7 @@ Usually it is one of two things:
 - you did not call `UI::Bind(app)`
 - no default font has been loaded
 
-The engine now loads the default `PixelStormMini.ttf` font at size 16 automatically.
+The engine loads the default `PixelStormMini.ttf` font automatically.
 If you replace it, load another font with `Application::LoadFont()` and select it with `Application::SetDefaultFont()`.
 
 ## The collider does not rotate with the sprite
@@ -34,14 +34,14 @@ The public physics system uses AABB:
 - the collider remains axis-aligned
 - the `Transform` scale does not change the collider either
 
-## Changing scenes clears my world
+## Changing Scenes Clears My World
 
 That is also expected.
 
 `SceneManager::ChangeScene()` clears the world before entering the new scene.
-If you need persistence, keep it outside the world.
+If you need persistence, keep it outside the world or rebuild it on entry.
 
-## `Entity` became invalid
+## `Entity` Became Invalid
 
 An entity becomes invalid if:
 
@@ -51,7 +51,7 @@ An entity becomes invalid if:
 
 Use `IsValid()` before operating on it if the reference might expire.
 
-## `Input::GetAxis2D("move")` returns zero
+## `Input::GetAxis2D("move")` Returns Zero
 
 Check that:
 
@@ -60,22 +60,22 @@ Check that:
 - you did not clear the default bindings
 - you are not querying a different action name that does not exist
 
-## My sprite uses a strange texture
+## My Sprite Uses a Strange Texture
 
 If `SpriteRenderer.TextureName` is empty, the engine uses the procedural fallback texture.
 That helps debugging, but it also means forgetting to load a texture name still leaves something visible.
 
-## Text follows the camera when I do not want it to
+## Text Follows the Camera When I Do Not Want It To
 
 Use `followCamera = false` in `UI::Print()` or `Application::DrawText()`.
 
-## The camera moves too slowly
+## The Camera Moves Too Slowly
 
-`FollowCamera()` uses exponential smoothing when `followSpeed > 0`.
+`FollowCamera()` uses smoothing when `followSpeed > 0`.
 
 If you want instant follow, use `followSpeed = 0.0f`.
 
-## `Play(name)` in animation does nothing
+## `Play(name)` in Animation Does Nothing
 
 That method does not throw if the clip does not exist.
 
@@ -85,7 +85,7 @@ Check:
 - that the name matches exactly
 - that `Animator` and `SpriteRenderer` exist on the entity
 
-## Particles are not spawning
+## Particles Are Not Spawning
 
 Check:
 
@@ -93,10 +93,15 @@ Check:
 - that you called `EmitBurst()`
 - that `AutoEmit` and `EmitRate` are configured if you want continuous emission
 
-## The screen uses strange coordinates
+## The Screen Uses Strange Coordinates
 
 PixelStorm works with a fixed logical resolution defined by the initial window.
 `GetMousePosition()` and the camera use that logical space, not the physical framebuffer.
+
+## The Scene Changes But Some State Still Looks Wrong
+
+That usually means the state lives outside the world, or the camera was not reset the way you expected.
+The engine resets camera tracking on scene changes, but your own global variables remain under your control.
 
 :::tip
 If something "works but does not show up", the problem is usually in the resource, the active scene, or the coordinate space.

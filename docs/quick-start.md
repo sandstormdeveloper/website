@@ -4,15 +4,9 @@ title: Quick Start Guide
 
 # Quick Start Guide
 
-The shortest way to get a functional window is this:
+The fastest way to see PixelStorm in action is to create a small scene that spawns one sprite, moves it with input, and draws a bit of UI text.
 
-1. Create the application.
-2. Load a texture and the base font.
-3. Bind `UI` if you want to use `UI::Print()`.
-4. Register a scene.
-5. Create a visible entity.
-6. Move it with input.
-7. Draw text on screen.
+## Complete Minimal Example
 
 ```cpp
 #include "pixelstorm/PixelStorm.h"
@@ -26,7 +20,7 @@ public:
     {
         m_Box = GetWorld().CreateSprite(
             "Box",
-            Vec2(-80.0f, 0.0f),
+            Vec2(160.0f, 180.0f),
             Vec2(32.0f, 32.0f),
             Colors::White(),
             "wall");
@@ -47,7 +41,7 @@ public:
         }
 
         UI::Print(
-            "Move with WASD or arrows",
+            "Move with WASD or the arrow keys",
             Vec2(16.0f, 16.0f),
             Colors::White(),
             1.0f,
@@ -63,7 +57,6 @@ int main()
     Application app(640, 360, "PixelStorm Quick Start");
 
     app.LoadTexture("wall", "assets/wall.png");
-
     UI::Bind(app);
 
     app.GetScenes().AddScene("demo", std::make_unique<DemoScene>());
@@ -76,17 +69,39 @@ int main()
 }
 ```
 
-## What this example does
+## What This Example Shows
 
-- Opens a `640x360` window.
-- Loads a texture named `wall`.
-- Uses the default text font loaded by the engine.
-- Registers a scene.
-- Creates a visible entity with `CreateSprite()`.
-- Moves it with the default `move` axis.
-- Draws a fixed HUD line with `UI::Print()`.
+- A logical `640x360` window, which is a very common pixel-art friendly ratio.
+- A texture loaded under the logical name `wall`.
+- A scene that owns its own gameplay state.
+- A visible entity created through the `World` helper.
+- Movement driven by the built-in `move` axis.
+- A HUD line drawn through `UI::Print()`.
+
+## What Is Happening Behind The Scenes
+
+When this code runs, the engine automatically handles a few things that are easy to miss on a first read:
+
+- the default font is already loaded by `Application`
+- the main camera is set up from the initial window size
+- the input layer is already connected to the GLFW window
+- the frame loop updates time, physics, animation, particles, and rendering in order
+
+That is why the example can stay so small while still behaving like a real game scene.
+
+## Default Input
+
+You do not need to bind movement keys for this first example.
+The engine already registers a default `move` axis that accepts both `WASD` and the arrow keys.
+
+## Useful Next Steps
+
+- Replace `wall.png` with your own sprite.
+- Swap `CreateSprite()` for `CreateActor()` if the entity needs physics.
+- Add `ChangeScene()` calls if you want menu and gameplay states.
+- Use `FollowCamera()` if the scene should keep the player centered.
 
 :::tip
-The `move` axis is already bound by default to both `WASD` and the arrow keys.
-You do not need manual bindings for this first example.
+If the sprite does not show up, check the asset path first.
+Most first-run issues are caused by the working directory rather than by the code itself.
 :::

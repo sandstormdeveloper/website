@@ -4,11 +4,9 @@ title: World Helpers
 
 # World Helpers
 
-`World` is the recommended way to create entities from gameplay code.
+`World` is the recommended way to create entities from gameplay code. Instead of assembling every component manually, the helper methods create a useful starting point for the kind of object you want to build.
 
-The idea is simple: instead of assembling components one by one, you use helpers that leave the entity ready for the kind of gameplay object you want.
-
-## World state
+## World State
 
 | Method | Use |
 | --- | --- |
@@ -21,7 +19,7 @@ The idea is simple: instead of assembling components one by one, you use helpers
 Inside `Application` this is already set up for you.
 :::
 
-## Basic creation
+## Basic Creation
 
 | Method | Components created |
 | --- | --- |
@@ -30,7 +28,7 @@ Inside `Application` this is already set up for you.
 
 Use these when you want to assemble the entity manually.
 
-## Sprites and actors
+## Sprites and Actors
 
 | Method | What it creates |
 | --- | --- |
@@ -95,7 +93,7 @@ If you only need a simple animation, `CreateAnimatedSprite()` is enough.
 | --- | --- |
 | `CreateParticleEmitter()` | creates an independent emitter |
 
-### Important defaults
+### Important Defaults
 
 | Field | Default |
 | --- | --- |
@@ -124,6 +122,13 @@ Entity emitter = GetWorld().CreateParticleEmitter(
 
 emitter.Particles().EmitBurst(1);
 ```
+
+### When To Use It
+
+- use `CreateSprite()` for props and static visuals
+- use `CreateActor()` for movable bodies
+- use `CreateStaticBox()` for walls and triggers
+- use `CreateAnimatedActor()` for characters with multiple clips
 
 :::note
 Particles are created as independent entities with `Transform`, `SpriteRenderer`, and `Particle`.

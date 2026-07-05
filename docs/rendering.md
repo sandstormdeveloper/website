@@ -4,23 +4,36 @@ title: Rendering
 
 # Rendering
 
-This module covers textures, fonts, shaders, and the 2D render pipeline used by PixelStorm.
+Rendering in PixelStorm is intentionally small and focused on 2D. The engine draws quads, text, and debug outlines; the gameplay side works with textures, fonts, and logical resource names; and the final image can optionally go through a CRT-style screen pass.
+
+## Render Flow
+
+At a high level, the frame is rendered in this order:
+
+1. the active scene gets a chance to draw custom content
+2. the world sprites are drawn
+3. debug colliders are optionally outlined
+4. queued text commands are rendered
+5. the CRT-style postprocess is applied if it is enabled
+
+This separation is useful because it keeps world rendering, debug visualization, and HUD text distinct while still presenting a single final frame.
 
 ## `Texture`
 
-`Texture` represents an OpenGL texture or the fallback texture.
+`Texture` represents an OpenGL texture or the procedural fallback texture used when a resource is missing.
 
 | Method | Use |
 | --- | --- |
-| `Texture()` | creates the procedural fallback texture |
+| `Texture()` | creates the fallback texture |
 | `Texture(path)` | loads a texture from disk |
 | `Bind(slot)` | binds it to a texture unit |
-| `GetWidth()` / `GetHeight()` | cached dimensions |
+| `GetWidth()` / `GetHeight()` | returns cached dimensions |
 
 ### Behavior
 
-- if loading fails, the engine uses a 2x2 fallback texture
-- the default filter is nearest-neighbor to preserve pixel-art look
+- if loading fails, the engine keeps running with the fallback texture
+- the default filter is nearest-neighbor, which preserves the pixel-art look
+- an empty `TextureName` on a sprite also resolves to the fallback texture
 
 ### Example
 
@@ -31,7 +44,7 @@ player.Bind(0);
 
 ## `Font`
 
-`Font` converts a TTF font into a texture atlas for fast text rendering.
+`Font` bakes a TTF file into a texture atlas and stores glyph metrics for fast text rendering.
 
 | Method | Use |
 | --- | --- |
@@ -40,27 +53,20 @@ player.Bind(0);
 | `Bind(slot)` | binds the atlas texture |
 | `IsValid()` | checks whether loading succeeded |
 | `GetPixelHeight()` | requested pixel height |
-| `GetLineHeight()` | real line height |
-| `GetAscent()` | ascent used for baseline alignment |
+| `GetLineHeight()` | line spacing in the baked atlas |
+| `GetAscent()` | baseline alignment offset |
 | `FindGlyph(codepoint)` | looks up glyph metadata |
 
-### Use cases
+### Use Cases
 
 | Case | Recommendation |
 | --- | --- |
-| HUD and dialog | `Application::LoadFont()` + `Application::SetDefaultFont()` |
-| tooling or isolated tests | `Font` directly |
+| HUD text, dialog, debug info | `Application::LoadFont()` + `Application::SetDefaultFont()` |
+| isolated tools or experiments | create `Font` directly |
 
-### Postprocess
+### Default Font
 
-The default renderer now includes a CRT-style postprocess pass.
-
-| Method | Use |
-| --- | --- |
-| `Application::SetPostProcessEnabled(true)` | turns the effect on |
-| `Application::SetPostProcessEnabled(false)` | draws the scene without the final screen pass |
-
-Use this if you want a clean pixel-art look or if you want to switch the effect off for UI-heavy scenes.
+The application loads `PixelStormMini.ttf` automatically so text works out of the box. If you want a different font, load it through the application and switch the default font by name.
 
 ## `Shader`
 
@@ -70,15 +76,18 @@ Use this if you want a clean pixel-art look or if you want to switch the effect 
 | --- | --- |
 | `Shader(name)` | looks for `<name>.vert` and `<name>.frag` |
 | `Use()` | activates the shader |
-| `SetInt()` | `int` uniform |
-| `SetMat4()` | `mat4` uniform |
-| `SetVec4()` | `vec4` uniform |
+| `SetInt()` | sets an `int` uniform |
+| `SetFloat()` | sets a `float` uniform |
+| `SetMat4()` | sets a `mat4` uniform |
+| `SetVec4()` | sets a `vec4` uniform |
 
-### Expected path
+### Expected Paths
 
 ```text
 assets/shaders/default.vert
 assets/shaders/default.frag
+assets/shaders/crt.vert
+assets/shaders/crt.frag
 ```
 
 ### Example
@@ -91,53 +100,91 @@ shader.SetInt("u_Texture", 0);
 
 ## `Renderer`
 
-`Renderer` draws quads and text using the engine pipeline.
+`Renderer` is the low-level draw helper used by the engine internals. Gameplay code usually does not need to call it directly, but it is useful to understand what it actually does.
 
 | Method | Use |
 | --- | --- |
-| `DrawQuad(shader, modelMatrix)` | draws a quad with a transform |
-| `DrawQuadOutline(shader, modelMatrix)` | draws the outline |
-| `DrawText(shader, font, position, text, color, scale)` | draws text |
+| `DrawQuad(shader, modelMatrix)` | draws a transformed quad |
+| `DrawQuadOutline(shader, modelMatrix)` | draws an outline around a quad |
+| `DrawText(shader, font, position, text, color, scale)` | draws text from a font atlas |
 
 :::warning
-`Renderer` is meant for the engine layer. If you use it directly, you must respect the shader and state expected by the pipeline.
+`Renderer` assumes the shader and OpenGL state expected by the engine pipeline.
+If you use it directly, you are responsible for respecting those expectations.
 :::
 
 ## `ResourceManager`
 
-`ResourceManager` keeps loaded resources by logical name.
+`ResourceManager` stores loaded textures and fonts by logical name.
 
 | Method | Use |
 | --- | --- |
 | `LoadTexture(name, path)` | loads and caches a texture |
 | `LoadFont(name, path, pixelHeight)` | loads and caches a font |
 | `HasTexture()` / `HasFont()` | checks whether a resource exists |
-| `GetTexture()` / `GetFont()` | gets the resource |
+| `GetTexture()` / `GetFont()` | returns the stored resource or `nullptr` |
 | `Clear()` | releases everything |
 
-### Important rule
+### Important Rule
 
-If you load the same name twice, the second call succeeds and reuses the existing resource.
+If you load the same logical name twice, the second call succeeds and reuses the existing resource.
+This keeps the gameplay code simple and avoids repeated loading.
 
 ## `AssetLoader`
 
-`AssetLoader` is a direct loading helper.
+`AssetLoader` is the direct file-loading helper used under the hood by `ResourceManager`.
 
 | Method | Use |
 | --- | --- |
-| `LoadTexture(path)` | returns `unique_ptr<Texture>` |
-| `LoadFont(path, pixelHeight)` | returns `unique_ptr<Font>` |
+| `LoadTexture(path)` | returns a `unique_ptr<Texture>` |
+| `LoadFont(path, pixelHeight)` | returns a `unique_ptr<Font>` |
 
-It is useful for tools or for your own higher-level layer.
+It is mostly useful as an implementation detail or as a starting point if you are building a higher-level loading layer.
 
-## Recommended flow
+## Sprite Rendering Details
+
+Sprites are drawn from `Transform` and `SpriteRenderer` data. The renderer respects:
+
+- `SpriteRenderer.TextureName`
+- `SpriteRenderer.Color`
+- `SpriteRenderer.Visible`
+- `SpriteRenderer.RenderOrder`
+- `SpriteRenderer.SourceRect`
+- horizontal and vertical flipping
+
+When a source rectangle is not set, the full texture is drawn.
+When a texture cannot be resolved, the fallback texture is used instead of failing hard.
+
+### Draw Order
+
+The engine sorts visible sprites before drawing them:
+
+1. lower `RenderOrder` values are drawn first
+2. if the render order is the same, lower `Position.y` values are drawn first
+3. if both values are equal, the entity ID is used as a final stable tie-breaker
+
+This gives the 2D scene a predictable layering model and also helps emulate depth in top-down or side-view games.
+
+## Postprocess
+
+The engine includes a CRT-style screen pass through the `crt` shader. It is enabled by default, and you can toggle it from gameplay code:
+
+```cpp
+app.SetPostProcessEnabled(false);
+```
+
+Use this when you want the final image without the screen-space effect, for example in a clean screenshot mode or a UI-heavy scene.
+
+## Recommended Flow
 
 The most convenient gameplay flow is:
 
-1. use `Application::LoadTexture()` and `Application::LoadFont()` when you need extra resources
-2. let `ResourceManager` cache the resources
-3. draw through `SpriteRenderer` and `UI::Print()`
+1. use `Application::LoadTexture()` and `Application::LoadFont()` for extra assets
+2. refer to them by logical name from your scenes and entities
+3. draw through the engine-managed rendering pipeline
+4. use `UI::Print()` or `Application::DrawText()` for text
 
 :::tip
-If a texture does not exist, the engine usually keeps running with the fallback texture, which makes missing-content debugging much easier.
+If a texture is missing, the engine usually keeps running with the fallback texture.
+That makes missing-content debugging much easier during development.
 :::

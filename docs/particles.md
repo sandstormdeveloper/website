@@ -4,7 +4,7 @@ title: Particles
 
 # Particles
 
-PixelStorm's particle system creates lightweight entities for visual effects.
+PixelStorm's particle system creates lightweight entities for visual effects. The implementation is simple on purpose: particles are just engine entities with their own transform, sprite, and particle state.
 
 ## `Particle`
 

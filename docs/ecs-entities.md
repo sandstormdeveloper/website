@@ -4,11 +4,11 @@ title: ECS / Entities
 
 # ECS / Entities
 
-PixelStorm exposes a public ECS layer, but for gameplay the normal entry points are `World` and `Entity`.
+PixelStorm exposes a public ECS layer, but gameplay code normally works through `World` and `Entity`. That keeps the API readable while still leaving the registry available for lower-level use cases.
 
 ## `Entity`
 
-`Entity` is a lightweight handle to a real object in the registry.
+`Entity` is a lightweight handle to a real object in the registry. It does not own the component data itself; it only points to it.
 
 ### Lifecycle
 
@@ -17,6 +17,8 @@ PixelStorm exposes a public ECS layer, but for gameplay the normal entry points 
 | `GetId()` | returns the numeric identifier |
 | `IsValid()` | checks whether the entity is still alive |
 | `Destroy(logDestruction)` | marks the entity for destruction |
+
+Destroyed entities disappear from normal gameplay queries immediately, and the actual component storage is released later when the registry flushes deferred destruction.
 
 ### Components
 
@@ -27,7 +29,7 @@ PixelStorm exposes a public ECS layer, but for gameplay the normal entry points 
 | `GetComponent<T>()` | direct access |
 | `RemoveComponent<T>()` | removes the component |
 
-### High-level helpers
+### High-Level Helpers
 
 | Helper | Requires |
 | --- | --- |
@@ -40,7 +42,7 @@ PixelStorm exposes a public ECS layer, but for gameplay the normal entry points 
 | `Particles()` | `ParticleEmitter` |
 
 :::important
-The helpers throw if the component does not exist.
+The helpers throw if the required component does not exist.
 Use `HasComponent<T>()` when the component is optional.
 :::
 
@@ -58,7 +60,7 @@ player.Sprite().FlipX(true);
 
 ## Proxies
 
-The proxies group frequent operations so you do not have to touch raw components all the time.
+The proxies group the most common component operations so gameplay code can stay readable.
 
 ### `Transform()`
 
@@ -74,7 +76,7 @@ The proxies group frequent operations so you do not have to touch raw components
 | Method | Use |
 | --- | --- |
 | `GetColor()` / `SetColor()` | sprite tint |
-| `GetTexture()` / `SetTexture()` / `ClearTexture()` | logical texture |
+| `GetTexture()` / `SetTexture()` / `ClearTexture()` | logical texture name |
 | `FlipX()` / `FlipY()` / `SetFlip()` | mirroring |
 | `IsVisible()` / `SetVisible()` / `Show()` / `Hide()` | visibility |
 | `GetRenderOrder()` / `SetRenderOrder()` | draw layer |
@@ -84,7 +86,7 @@ The proxies group frequent operations so you do not have to touch raw components
 | Method | Use |
 | --- | --- |
 | `GetSize()` / `SetSize()` | AABB size |
-| `GetOffset()` / `SetOffset()` | offset from transform |
+| `GetOffset()` / `SetOffset()` | offset from the transform |
 | `IsTrigger()` / `SetTrigger()` | convert to sensor |
 
 ### `Rigidbody()`
@@ -135,7 +137,7 @@ The proxies group frequent operations so you do not have to touch raw components
 
 `Registry` is the lower-level ECS layer. It is public, but `World` is usually the better gameplay entry point.
 
-### When to use it
+### When To Use It
 
 - when you need to query many entities by components
 - when you want to name entities or clear ECS state manually
@@ -152,6 +154,10 @@ The proxies group frequent operations so you do not have to touch raw components
 | `GetEntitiesWith<...>()` | queries entities by components |
 | `SetEntityName()` / `GetEntityName()` | debug naming |
 | `Clear()` | clears all ECS state |
+
+### Useful Rule
+
+When you want to remove an entity during gameplay, it is safe to call `Destroy()` or `World::DestroyEntity()` from scene logic or trigger callbacks. The registry will mark it as removed from gameplay queries and clean the storage later in a controlled way.
 
 :::note
 In normal gameplay, `World` already gives you the high-level operations you usually need without touching `Registry` directly.

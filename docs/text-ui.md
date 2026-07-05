@@ -4,10 +4,12 @@ title: Text / UI
 
 # Text / UI
 
-PixelStorm gives you two paths for text:
+PixelStorm gives you two paths for drawing text:
 
 - `Application::DrawText()`
 - `UI::Print()`
+
+Both routes end up in the same text queue. The difference is mostly convenience.
 
 ## `Application::DrawText`
 
@@ -35,7 +37,7 @@ app.DrawText("Loading...", Vec2(16.0f, 16.0f), Colors::White(), 1.0f, false);
 
 ## `UI`
 
-`UI` is just a static wrapper over the active application.
+`UI` is a static wrapper over the active application.
 
 | Method | Use |
 | --- | --- |
@@ -43,7 +45,7 @@ app.DrawText("Loading...", Vec2(16.0f, 16.0f), Colors::White(), 1.0f, false);
 | `Unbind()` | breaks the connection |
 | `Print(...)` | queues text |
 
-### When to use it
+### When To Use It
 
 - in scenes, so you do not have to pass `Application &` everywhere
 - in gameplay code where you want a quick HUD access point
@@ -59,7 +61,7 @@ UI::Print(
     false);
 ```
 
-## World text and fixed HUD
+## World Text and Fixed HUD
 
 | Case | followCamera |
 | --- | --- |
@@ -67,13 +69,19 @@ UI::Print(
 | NPC name label | `true` |
 | contextual help | `false` |
 
-### Mixed example
+### Mixed Example
 
 ```cpp
 UI::Print("Score: 120", Vec2(12.0f, 12.0f), Colors::White(), 1.0f, false);
 UI::Print("Merchant", npc.Transform().GetPosition() + Vec2(0.0f, -24.0f), Colors::White(), 1.0f, true);
 ```
 
+## Practical Notes
+
+- `UI::Print()` does nothing if `UI::Bind(app)` was not called
+- the default `PixelStormMini.ttf` font is loaded automatically by `Application`
+- if you replace the default font, remember to set it as the new default before drawing text
+
 :::tip
-If `UI::Print()` does not draw anything, first check that you called `UI::Bind(app)` and that a default font has been loaded.
+If `UI::Print()` does not draw anything, first check that `UI::Bind(app)` was called and that a default font is available.
 :::

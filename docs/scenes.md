@@ -4,7 +4,7 @@ title: Scenes
 
 # Scenes
 
-Scenes are the main gameplay flow unit in PixelStorm.
+Scenes are the main gameplay flow unit in PixelStorm. They let the engine separate menu states, game states, and transition states without forcing everything into a single update function.
 
 ## `Scene`
 
@@ -17,7 +17,7 @@ A scene inherits from `Scene` and overrides the lifecycle callbacks.
 | `OnRender()` | before the engine presents the frame |
 | `OnExit()` | just before the scene stops being active |
 
-### Available context
+### Available Context
 
 Inside a scene you can access:
 
@@ -32,7 +32,7 @@ The context is bound by `SceneManager`.
 Do not assume the accessors are valid before the scene has been registered and activated.
 :::
 
-### Recommended usage
+### Recommended Structure
 
 ```cpp
 class GameScene final : public Scene
@@ -70,15 +70,16 @@ public:
 | `ChangeScene()` with an unknown name | returns `false` |
 | `ChangeScene()` without a bound world | returns `false` |
 
-### What `ChangeScene()` does
+### What `ChangeScene()` Does
 
 When you change scenes:
 
 1. it calls `OnExit()` on the current scene, if any
-2. it clears the world
-3. it activates the new scene
-4. it binds the current context
-5. it calls `OnEnter()` on the new scene
+2. it resets camera tracking
+3. it clears the world
+4. it activates the new scene
+5. it binds the current context
+6. it calls `OnEnter()` on the new scene
 
 :::warning
 Changing scenes clears the entire world.
@@ -93,9 +94,9 @@ app.GetScenes().AddScene("menu", std::make_unique<MenuScene>());
 app.GetScenes().ChangeScene("menu");
 ```
 
-## Useful patterns
+## Useful Patterns
 
-### Change scene from gameplay
+### Change Scene From Gameplay
 
 ```cpp
 if (Input::IsActionJustPressed("interact"))
@@ -104,13 +105,13 @@ if (Input::IsActionJustPressed("interact"))
 }
 ```
 
-### Access physics from a scene
+### Access Physics From a Scene
 
 ```cpp
 const std::vector<TriggerEvent> events = GetPhysicsSystem().GetTriggerEventsFor(player);
 ```
 
-### Custom rendering
+### Custom Rendering
 
 `OnRender()` is useful for extra drawing, overlays, or custom debug visuals. The engine still draws the main world afterward.
 
