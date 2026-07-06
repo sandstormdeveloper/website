@@ -101,8 +101,8 @@ Entity fx = GetWorld().CreateParticleEmitter(
     90.0f,
     20.0f,
     180.0f,
-    glm::vec4(1.0f, 0.8f, 0.2f, 1.0f),
-    glm::vec4(1.0f, 0.2f, 0.0f, 0.0f));
+    Vec4(1.0f, 0.8f, 0.2f, 1.0f),
+    Vec4(1.0f, 0.2f, 0.0f, 0.0f));
 
 fx.Particles().EmitBurst(12);
 ```

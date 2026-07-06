@@ -52,7 +52,8 @@ public:
 
 | Method | Use |
 | --- | --- |
-| `AddScene(name, scene)` | registers a scene owned by `unique_ptr` |
+| `AddScene<TScene>(name, ...)` | constructs and registers a scene internally |
+| `AddScene(name, unique_ptr)` | registers an already created scene |
 | `HasScene(name)` | checks whether it exists |
 | `ChangeScene(name)` | changes the active scene |
 | `Update(deltaTime)` | updates the active scene |
@@ -65,7 +66,7 @@ public:
 | Situation | Result |
 | --- | --- |
 | empty name in `AddScene()` | returns `false` |
-| null scene in `AddScene()` | returns `false` |
+| null `unique_ptr` in `AddScene()` | returns `false` |
 | duplicate name | returns `false` |
 | `ChangeScene()` with an unknown name | returns `false` |
 | `ChangeScene()` without a bound world | returns `false` |
@@ -89,10 +90,12 @@ If you need persistence between scenes, keep it outside the world or rebuild it 
 ### Example
 
 ```cpp
-app.GetScenes().AddScene("game", std::make_unique<GameScene>());
-app.GetScenes().AddScene("menu", std::make_unique<MenuScene>());
+app.GetScenes().AddScene<GameScene>("game");
+app.GetScenes().AddScene<MenuScene>("menu");
 app.GetScenes().ChangeScene("menu");
 ```
+
+If you already have a `std::unique_ptr<Scene>`, you can still pass it directly. For the common case, the template form avoids writing `GameScene{}` at the call site.
 
 ## Useful Patterns
 
@@ -114,6 +117,8 @@ const std::vector<TriggerEvent> events = GetPhysicsSystem().GetTriggerEventsFor(
 ### Custom Rendering
 
 `OnRender()` is useful for extra drawing, overlays, or custom debug visuals. The engine still draws the main world afterward.
+
+For centered text in menus or overlays, `UI::Print()` and `Application::DrawText()` accept a `TextAnchor` such as `TextAnchor::MiddleCenter`.
 
 :::tip
 If you only need normal gameplay, `OnUpdate()` is usually enough.

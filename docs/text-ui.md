@@ -11,6 +11,19 @@ PixelStorm gives you two paths for drawing text:
 
 Both routes end up in the same text queue. The difference is mostly convenience.
 
+## Anchors
+
+Text drawing now supports anchors so you can center a label without manually adjusting its position.
+
+| Anchor | Effect |
+| --- | --- |
+| `TextAnchor::TopLeft` | default, no offset |
+| `TextAnchor::TopCenter` | centers horizontally |
+| `TextAnchor::MiddleCenter` | centers horizontally and vertically |
+| `TextAnchor::BottomCenter` | centers horizontally and aligns the bottom |
+
+Other combinations are also available, such as `MiddleLeft` or `BottomRight`.
+
 ## `Application::DrawText`
 
 This is the base method.
@@ -22,6 +35,7 @@ This is the base method.
 | `color` | RGBA tint |
 | `scale` | text scale |
 | `followCamera` | world text or fixed HUD |
+| `anchor` | alignment relative to `position` |
 
 ### Rules
 
@@ -32,7 +46,7 @@ This is the base method.
 ### Example
 
 ```cpp
-app.DrawText("Loading...", Vec2(16.0f, 16.0f), Colors::White(), 1.0f, false);
+app.DrawText("Loading...", Vec2(320.0f, 180.0f), Colors::White(), 1.0f, false, TextAnchor::MiddleCenter);
 ```
 
 ## `UI`
@@ -55,10 +69,11 @@ app.DrawText("Loading...", Vec2(16.0f, 16.0f), Colors::White(), 1.0f, false);
 ```cpp
 UI::Print(
     "Press Interact to change scene",
-    Vec2(16.0f, 16.0f),
+    Vec2(320.0f, 180.0f),
     Colors::White(),
     1.0f,
-    false);
+    false,
+    TextAnchor::MiddleCenter);
 ```
 
 ## World Text and Fixed HUD
@@ -74,6 +89,12 @@ UI::Print(
 ```cpp
 UI::Print("Score: 120", Vec2(12.0f, 12.0f), Colors::White(), 1.0f, false);
 UI::Print("Merchant", npc.Transform().GetPosition() + Vec2(0.0f, -24.0f), Colors::White(), 1.0f, true);
+```
+
+`ToString()` from `pixelstorm/core/Math.h` is useful here when you want to show values like positions or coordinates:
+
+```cpp
+UI::Print("Pos: " + ToString(player.Transform().GetPosition()), Vec2(12.0f, 28.0f), Colors::White(), 1.0f, false);
 ```
 
 ## Practical Notes

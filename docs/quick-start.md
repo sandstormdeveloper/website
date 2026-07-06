@@ -11,8 +11,6 @@ The fastest way to see PixelStorm in action is to create a small scene that spaw
 ```cpp
 #include "pixelstorm/PixelStorm.h"
 
-#include <memory>
-
 class DemoScene final : public Scene
 {
 public:
@@ -59,7 +57,7 @@ int main()
     app.LoadTexture("wall", "assets/wall.png");
     UI::Bind(app);
 
-    app.GetScenes().AddScene("demo", std::make_unique<DemoScene>());
+    app.GetScenes().AddScene<DemoScene>("demo");
     app.GetScenes().ChangeScene("demo");
 
     app.Run();

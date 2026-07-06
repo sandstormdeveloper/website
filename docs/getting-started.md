@@ -105,7 +105,7 @@ int main()
     app.LoadTexture("wall", "assets/wall.png");
     UI::Bind(app);
 
-    app.GetScenes().AddScene("demo", std::make_unique<DemoScene>());
+    app.GetScenes().AddScene<DemoScene>("demo");
     app.GetScenes().ChangeScene("demo");
 
     app.Run();

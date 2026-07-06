@@ -17,6 +17,7 @@ PixelStorm exposes a public ECS layer, but gameplay code normally works through 
 | `GetId()` | returns the numeric identifier |
 | `IsValid()` | checks whether the entity is still alive |
 | `Destroy(logDestruction)` | marks the entity for destruction |
+| `GetName()` | returns the optional debug/game name |
 
 Destroyed entities disappear from normal gameplay queries immediately, and the actual component storage is released later when the registry flushes deferred destruction.
 
@@ -56,6 +57,18 @@ if (player.HasComponent<Rigidbody>())
 
 player.Transform().SetPivot(Vec2(16.0f, 16.0f));
 player.Sprite().FlipX(true);
+```
+
+### Named Entity Example
+
+```cpp
+bullet.EntityHandle.Trigger().SetOnEnter([&](Entity other)
+{
+    if (other.GetName() == "Enemy")
+    {
+        other.Destroy();
+    }
+});
 ```
 
 ## Proxies
@@ -152,7 +165,7 @@ The proxies group the most common component operations so gameplay code can stay
 | `DestroyEntity(entity)` | destroys an entity |
 | `FlushDestroyedEntities()` | releases deferred storage |
 | `GetEntitiesWith<...>()` | queries entities by components |
-| `SetEntityName()` / `GetEntityName()` | debug naming |
+| `SetEntityName()` / `GetEntityName()` / `Entity::GetName()` | debug naming |
 | `Clear()` | clears all ECS state |
 
 ### Useful Rule

@@ -88,6 +88,7 @@ app.DrawText("Loading...", Vec2(16.0f, 16.0f), Colors::White(), 1.0f, false);
 | `FollowCamera(entity, offset, followRotation, followSpeed)` | makes the camera follow an entity |
 | `StopCameraFollow()` | clears the follow target |
 | `IsCameraFollowing()` | checks whether a follow target is active |
+| `IsPositionOutsideCamera(position, margin)` | checks whether a world position is outside the visible camera area |
 | `ResetCameraTracking()` | restores the default camera state |
 
 #### `FollowCamera`
@@ -99,6 +100,8 @@ app.DrawText("Loading...", Vec2(16.0f, 16.0f), Colors::White(), 1.0f, false);
 | `followSpeed` | `8.0f` | values `<= 0` force an instant snap |
 
 If the target entity becomes invalid or loses its `Transform`, the follow is canceled automatically.
+
+`IsPositionOutsideCamera()` is useful for simple projectile cleanup, culling helper objects, and gameplay logic that should stop caring about things once they are offscreen.
 
 ### Physics and Debug
 

@@ -157,7 +157,7 @@ The engine's collisions are AABB based. If you need real rotating physics or com
 ### Example
 
 ```cpp
-AnimationClip run(glm::ivec2(32, 32), 6, 3, 10.0f, true, 0);
+AnimationClip run(iVec2(32, 32), 6, 3, 10.0f, true, 0);
 ```
 
 ## Particles

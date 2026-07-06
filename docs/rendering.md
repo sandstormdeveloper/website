@@ -173,6 +173,8 @@ The engine includes a CRT-style screen pass through the `crt` shader. It is enab
 app.SetPostProcessEnabled(false);
 ```
 
+The chromatic aberration inside the CRT shader scales down when the postprocess viewport is smaller, so the effect stays readable in reduced window sizes.
+
 Use this when you want the final image without the screen-space effect, for example in a clean screenshot mode or a UI-heavy scene.
 
 ## Recommended Flow

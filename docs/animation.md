@@ -28,7 +28,7 @@ The engine animation system is based on spritesheet clips and one animator per e
 ### Example
 
 ```cpp
-AnimationClip run(glm::ivec2(32, 32), 6, 3, 10.0f, true, 0);
+AnimationClip run(iVec2(32, 32), 6, 3, 10.0f, true, 0);
 ```
 
 ## `Animator`
@@ -75,8 +75,8 @@ AnimationClip run(glm::ivec2(32, 32), 6, 3, 10.0f, true, 0);
 ### Example
 
 ```cpp
-player.Animation().AddClip("idle", AnimationClip(glm::ivec2(32, 32), 4, 4, 0.0f, true));
-player.Animation().AddClip("walk", AnimationClip(glm::ivec2(32, 32), 6, 3, 10.0f, true));
+player.Animation().AddClip("idle", AnimationClip(iVec2(32, 32), 4, 4, 0.0f, true));
+player.Animation().AddClip("walk", AnimationClip(iVec2(32, 32), 6, 3, 10.0f, true));
 player.Animation().Play("walk");
 ```
 

@@ -79,6 +79,23 @@ UI::Print("HUD", Vec2(12.0f, 12.0f), Colors::White(), 1.0f, false);
 UI::Print("Enemy", enemy.Transform().GetPosition(), Colors::Red(), 1.0f, true);
 ```
 
+### Projectile Cleanup
+
+```cpp
+if (GetApplication().IsPositionOutsideCamera(bullet.Transform().GetPosition(), 32.0f))
+{
+    bullet.Destroy(false);
+}
+```
+
+### Aim With Mouse
+
+```cpp
+const Vec2 mouseWorld = Input::GetMouseWorldPosition(GetApplication().GetCamera());
+const Vec2 aimDirection = mouseWorld - gun.Transform().GetPosition();
+gun.Transform().SetRotation(Degrees(Atan2(aimDirection.y, aimDirection.x)));
+```
+
 ### Instant Camera Snap
 
 ```cpp

@@ -30,9 +30,69 @@ If you already know exactly which module you need, you can include the specific 
 | Type | Alias | Base |
 | --- | --- | --- |
 | 2D vector | `Vec2` | `glm::vec2` |
-| RGBA color | `Color` | `glm::vec4` |
+| 4D vector | `Vec4` | `glm::vec4` |
+| RGBA color | `Color` | `Vec4` |
+| 2D integer vector | `iVec2` | `glm::ivec2` |
+| Dynamic array | `Array<T>` | `std::vector<T>` |
 
 These aliases make gameplay code easier to read and reduce the amount of GLM-specific syntax you need to carry around in every file.
+
+It also exposes a few math helpers so gameplay code can stay engine-style instead of falling back to `std::` everywhere:
+
+| Function | Use |
+| --- | --- |
+| `Sin(radians)` | sine |
+| `Cos(radians)` | cosine |
+| `Tan(radians)` | tangent |
+| `Atan2(y, x)` | angle from a vector |
+| `Degrees(radians)` | converts radians to degrees |
+| `Radians(degrees)` | converts degrees to radians |
+| `Normalize(vec)` | returns a unit-length vector |
+
+`Sin`, `Cos`, `Tan`, and `Atan2` use radians, which matches the standard C++ math functions.
+Use `Degrees()` and `Radians()` when you need to bridge between radians and the engine's degree-based rotation values.
+`Normalize()` returns a zero vector if the input has no length, so it is safe to use when the mouse is exactly over the source point.
+
+It also includes a small `ToString()` helper for common engine types:
+
+| Function | Result |
+| --- | --- |
+| `ToString(Vec2)` | `"(x, y)"` |
+| `ToString(Vec4)` | `"(x, y, z, w)"` |
+| `ToString(iVec2)` | `"(x, y)"` |
+
+This is handy when you want to build debug messages or HUD text without writing formatting code every time.
+
+The same header also provides two small collection helpers:
+
+| Function | Use |
+| --- | --- |
+| `Add(array, value)` | adds an element to the end |
+| `ForEach(array, func)` | runs a function on every element |
+| `RemoveIf(array, predicate)` | removes elements that match a condition |
+
+These helpers are meant to keep gameplay code readable when you only need to iterate or clean up a list.
+
+### Example
+
+```cpp
+Add(bullets, Bullet{ bullet, bulletDirection * 360.0f, false });
+
+ForEach(bullets, [&](Bullet &bullet)
+{
+    bullet.EntityHandle.Transform().Translate(bullet.Velocity * deltaTime);
+});
+
+RemoveIf(bullets, [](const Bullet &bullet)
+{
+    return bullet.Dead;
+});
+```
+
+This pattern is usually the easiest one for gameplay code:
+- `Add()` appends a new element
+- `ForEach()` updates the elements
+- `RemoveIf()` removes the ones that are no longer needed
 
 ## Colors
 

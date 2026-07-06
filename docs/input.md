@@ -19,6 +19,7 @@ title: Input
 | `IsMouseButtonJustPressed()` | mouse button pressed this frame |
 | `IsMouseButtonJustReleased()` | mouse button released this frame |
 | `GetMousePosition()` | cursor position in logical space |
+| `GetMouseWorldPosition(camera)` | cursor position transformed into world space |
 | `GetMouseDelta()` | cursor movement between frames |
 
 :::important
@@ -113,12 +114,21 @@ That matches the engine's logical resolution and the way the demo moves entities
 ## Mouse
 
 `GetMousePosition()` returns the cursor position remapped to logical resolution.
+`GetMouseWorldPosition(camera)` converts that logical position into world space using the camera's view-projection matrix.
 `GetMouseDelta()` returns movement in window coordinates.
 
 :::warning
 Mouse delta and logical position do not use exactly the same space.
 If you mix both in your own system, it is worth checking the context carefully.
 :::
+
+### Example
+
+```cpp
+const Vec2 mouseWorld = Input::GetMouseWorldPosition(GetApplication().GetCamera());
+const Vec2 direction = mouseWorld - gun.Transform().GetPosition();
+gun.Transform().SetRotation(Degrees(Atan2(direction.y, direction.x)));
+```
 
 ## Practical Example
 
