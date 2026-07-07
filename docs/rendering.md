@@ -107,11 +107,14 @@ shader.SetInt("u_Texture", 0);
 | `DrawQuad(shader, modelMatrix)` | draws a transformed quad |
 | `DrawQuadOutline(shader, modelMatrix)` | draws an outline around a quad |
 | `DrawText(shader, font, position, text, color, scale)` | draws text from a font atlas |
+| `MeasureText(font, text, scale)` | measures the rendered text size in pixels |
 
 :::warning
 `Renderer` assumes the shader and OpenGL state expected by the engine pipeline.
 If you use it directly, you are responsible for respecting those expectations.
 :::
+
+`MeasureText()` is mainly used by the engine when it needs to align text anchors, but it is also useful if you want to center or right-align custom text without drawing it first.
 
 ## `ResourceManager`
 

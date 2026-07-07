@@ -90,6 +90,7 @@ app.DrawText("Loading...", Vec2(16.0f, 16.0f), Colors::White(), 1.0f, false);
 | `IsCameraFollowing()` | checks whether a follow target is active |
 | `IsPositionOutsideCamera(position, margin)` | checks whether a world position is outside the visible camera area |
 | `ResetCameraTracking()` | restores the default camera state |
+| `ShakeCamera(durationSeconds, magnitude, frequency)` | adds a short camera shake effect |
 
 #### `FollowCamera`
 
@@ -102,6 +103,9 @@ app.DrawText("Loading...", Vec2(16.0f, 16.0f), Colors::White(), 1.0f, false);
 If the target entity becomes invalid or loses its `Transform`, the follow is canceled automatically.
 
 `IsPositionOutsideCamera()` is useful for simple projectile cleanup, culling helper objects, and gameplay logic that should stop caring about things once they are offscreen.
+
+`ShakeCamera()` is a lightweight screen shake effect for hits, explosions, or boss events.
+It works on top of the base camera state, so it can be combined with follow camera without replacing it.
 
 ### Physics and Debug
 

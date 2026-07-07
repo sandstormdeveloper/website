@@ -26,6 +26,7 @@ Inside a scene you can access:
 - `GetPhysicsSystem()`
 - `GetApplication()`
 - `ChangeScene(name)`
+- `ChangeScene(name, delaySeconds)`
 
 :::important
 The context is bound by `SceneManager`.
@@ -56,6 +57,7 @@ public:
 | `AddScene(name, unique_ptr)` | registers an already created scene |
 | `HasScene(name)` | checks whether it exists |
 | `ChangeScene(name)` | changes the active scene |
+| `ChangeScene(name, delaySeconds)` | changes the active scene after a delay |
 | `Update(deltaTime)` | updates the active scene |
 | `Render()` | calls `OnRender()` on the active scene |
 | `GetActiveScene()` | returns the current scene |
@@ -70,6 +72,8 @@ public:
 | duplicate name | returns `false` |
 | `ChangeScene()` with an unknown name | returns `false` |
 | `ChangeScene()` without a bound world | returns `false` |
+| `ChangeScene(name, delaySeconds)` with an unknown name | returns `false` |
+| `ChangeScene(name, delaySeconds)` without a bound world | returns `false` |
 
 ### What `ChangeScene()` Does
 
@@ -81,6 +85,16 @@ When you change scenes:
 4. it activates the new scene
 5. it binds the current context
 6. it calls `OnEnter()` on the new scene
+
+### Delayed Scene Changes
+
+You can also request a scene change after a short delay:
+
+```cpp
+ChangeScene("gameover", 1.0f);
+```
+
+That is useful for death screens, hit pauses, or small transition moments without adding extra state in gameplay code.
 
 :::warning
 Changing scenes clears the entire world.
@@ -104,7 +118,7 @@ If you already have a `std::unique_ptr<Scene>`, you can still pass it directly. 
 ```cpp
 if (Input::IsActionJustPressed("interact"))
 {
-    ChangeScene("second");
+    ChangeScene("second", 0.5f);
 }
 ```
 

@@ -184,6 +184,7 @@ AnimationClip run(iVec2(32, 32), 6, 3, 10.0f, true, 0);
 | `Active` | `true` | whether it can emit |
 | `Loop` | `false` | whether it auto-emits cyclically |
 | `AutoEmit` | `false` | whether it emits over time |
+| `OneShot` | `false` | whether it destroys itself after spawning |
 | `BurstCount` | `8` | particles per burst |
 | `EmitRate` | `0.0f` | bursts per second |
 | `Lifetime` | `0.75f` | lifetime of each particle |
@@ -200,3 +201,5 @@ emitter.BurstCount = 12;
 emitter.AutoEmit = true;
 emitter.EmitRate = 4.0f;
 ```
+
+`OneShot` is useful for one-off effects like explosions or hit sparks, where the emitter should clean itself up after the spawn cycle finishes.

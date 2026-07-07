@@ -30,7 +30,7 @@ player.Rigidbody().SetVelocity(move * 120.0f);
 ```cpp
 if (Input::IsActionJustPressed("interact"))
 {
-    ChangeScene("second");
+    ChangeScene("second", 0.5f);
 }
 ```
 
@@ -98,6 +98,7 @@ zone.Trigger().SetOnEnter([&](Entity other)
 1. create a trigger with `CreateStaticBox(..., true)`
 2. register `SetOnEnter()` or `SetOnExit()`
 3. keep the callback small and let the scene decide what to do next
+4. use `ChangeScene(name, delaySeconds)` if you want a short transition before switching scenes
 
 :::tip
 If you want to build a complete game quickly, use `CreateSprite()` for props, `CreateActor()` for movable bodies, and `CreateStaticBox()` for walls and triggers.

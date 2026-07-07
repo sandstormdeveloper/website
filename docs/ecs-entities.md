@@ -67,6 +67,21 @@ bullet.EntityHandle.Trigger().SetOnEnter([&](Entity other)
     if (other.GetName() == "Enemy")
     {
         other.Destroy();
+        bullet.Destroy();
+    }
+});
+```
+
+If you prefer to keep the handle name explicit, you can copy it into `self` and avoid `mutable` entirely:
+
+```cpp
+const Entity self = bullet;
+bullet.Trigger().SetOnEnter([&, self](Entity other)
+{
+    if (other.GetName() == "Enemy")
+    {
+        other.Destroy();
+        self.Destroy();
     }
 });
 ```
@@ -90,6 +105,8 @@ The proxies group the most common component operations so gameplay code can stay
 | --- | --- |
 | `GetColor()` / `SetColor()` | sprite tint |
 | `GetTexture()` / `SetTexture()` / `ClearTexture()` | logical texture name |
+| `IsFlippedX()` / `SetFlippedX()` | horizontal flip state |
+| `IsFlippedY()` / `SetFlippedY()` | vertical flip state |
 | `FlipX()` / `FlipY()` / `SetFlip()` | mirroring |
 | `IsVisible()` / `SetVisible()` / `Show()` / `Hide()` | visibility |
 | `GetRenderOrder()` / `SetRenderOrder()` | draw layer |
@@ -142,8 +159,20 @@ The proxies group the most common component operations so gameplay code can stay
 | `IsPlaying()` | active state |
 | `IsLooping()` / `SetLoop()` | auto-emission loop |
 | `IsAutoEmitting()` / `SetAutoEmit()` | continuous emission |
+| `IsOneShot()` / `SetOneShot()` | self-destruct after the burst |
 | `GetBurstCount()` / `SetBurstCount()` | burst size |
 | `GetEmitRate()` / `SetEmitRate()` | emission rate |
+| `GetLifetime()` / `SetLifetime()` | lifetime for spawned particles |
+| `GetSpeed()` / `SetSpeed()` | base speed |
+| `GetSpeedVariation()` / `SetSpeedVariation()` | speed randomness |
+| `GetSpread()` / `SetSpread()` | emission angle spread |
+| `GetStartColor()` / `SetStartColor()` | initial particle color |
+| `GetEndColor()` / `SetEndColor()` | final particle color |
+| `GetStartScale()` / `SetStartScale()` | initial particle scale |
+| `GetEndScale()` / `SetEndScale()` | final particle scale |
+| `GetGravityScale()` / `SetGravityScale()` | particle gravity multiplier |
+| `GetTexture()` / `SetTexture()` | particle texture name |
+| `GetRenderOrder()` / `SetRenderOrder()` | particle draw layer |
 | `EmitBurst(count)` | requests extra bursts |
 
 ## `Registry`
@@ -162,6 +191,7 @@ The proxies group the most common component operations so gameplay code can stay
 | --- | --- |
 | `CreateEntity()` | creates a new entity |
 | `CreateEntity(name)` | creates an entity with a name |
+| `CreateEntitySilent(name)` | creates an entity with a name without logging |
 | `DestroyEntity(entity)` | destroys an entity |
 | `FlushDestroyedEntities()` | releases deferred storage |
 | `GetEntitiesWith<...>()` | queries entities by components |

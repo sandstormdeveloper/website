@@ -19,10 +19,13 @@ Text drawing now supports anchors so you can center a label without manually adj
 | --- | --- |
 | `TextAnchor::TopLeft` | default, no offset |
 | `TextAnchor::TopCenter` | centers horizontally |
+| `TextAnchor::TopRight` | aligns the top-right corner |
+| `TextAnchor::MiddleLeft` | centers vertically |
 | `TextAnchor::MiddleCenter` | centers horizontally and vertically |
+| `TextAnchor::MiddleRight` | aligns the middle-right edge |
+| `TextAnchor::BottomLeft` | aligns the bottom-left corner |
 | `TextAnchor::BottomCenter` | centers horizontally and aligns the bottom |
-
-Other combinations are also available, such as `MiddleLeft` or `BottomRight`.
+| `TextAnchor::BottomRight` | aligns the bottom-right corner |
 
 ## `Application::DrawText`
 
